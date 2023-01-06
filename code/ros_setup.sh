@@ -1,4 +1,4 @@
-#This is not a difinitive installer, just the commands i found i needed in the correct order
+#This is not a definitive installer, just the commands i found i needed in the correct order
 #NEEDS: Ubuntu 20.04 or lower
 #See http://wiki.ros.org/noetic/Installation/Ubuntu for a basic installation without PX4
 

@@ -2,9 +2,10 @@
 import rospy, time
 import mavros
 from enum import Enum
-from geometry_msgs.msg import PoseStamped
+from geometry_msgs.msg import PoseStamped, TwistStamped
 from mavros_msgs.msg import State, PositionTarget
 from mavros_msgs.srv import CommandBool, CommandBoolRequest, SetMode, SetModeRequest
+from sensor_msgs.msg import NavSatFix
 
 current_state = State()
 
@@ -74,13 +75,25 @@ def set_follow_me_target(target_position, target_velocity):
 #TODO: Load waypoints
 #TODO: Reset waypoints (update if times change etc.)
 #TODO: Follow mode if behind another drone
+global_pos = []
 if __name__ == "__main__":
 	rospy.init_node("offb_node_py")
 
+
 	state_sub = rospy.Subscriber("mavros/state", State, callback = state_cb)
+	#https://wiki.ros.org/mavros#mavros.2FPlugins.Avoiding_Pitfalls_Related_to_Ellipsoid_Height_and_Height_Above_Mean_Sea_Level
+	def global_pos_call(x):
+		global global_pos
+		global_pos = [x.latitude, x.longitude, x.altitude]
+		#rospy.loginfo(f"GPS: {global_pos}")
+	global_pos_sub = rospy.Subscriber("/mavros/global_position/global", NavSatFix, global_pos_call)
+
 
 	local_pos_pub = rospy.Publisher("mavros/setpoint_position/local", PoseStamped, queue_size=10)
-	
+	#TODO: Speed
+	setpoint_velocity_pub = rospy.Publisher('/mavros/setpoint_velocity/cmd_vel',TwistStamped, queue_size = 10)
+
+
 	rospy.wait_for_service("/mavros/cmd/arming")
 	arming_client = rospy.ServiceProxy("mavros/cmd/arming", CommandBool)    
 
@@ -96,9 +109,11 @@ if __name__ == "__main__":
 		rate.sleep()
 
 	pose = PoseStamped()
+	velocity = TwistStamped()
 
 	#
 	state = DState.Travel
+	#TODO: Use global_pos (default [47.397742, 8.5455934, 535.2899164476947])
 	path = [
 		Waypoint(Point(0,0,2), True, deadline=time.time()+60, wait=5),
 		Waypoint(Point(5,5,5), True, deadline=time.time()+120)
@@ -139,6 +154,7 @@ if __name__ == "__main__":
 
 			last_req = rospy.Time.now()
 		else:
+			#TODO: Should only be needed on start
 			if(not current_state.armed and (rospy.Time.now() - last_req) > rospy.Duration(5.0)):
 				if(arming_client.call(arm_cmd).success == True):
 					rospy.loginfo("Vehicle armed")
@@ -169,5 +185,6 @@ if __name__ == "__main__":
 			local_pos_pub.publish(pose)
 		if (state == DState.End):
 			last_req = setState(land_set_mode.custom_mode, land_set_mode, last_req)
+			break
 
 		rate.sleep()
