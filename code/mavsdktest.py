@@ -71,7 +71,7 @@ responsiveness =  0.02
 
 
 def get_ambulance_pos():
-	return [47.3977419, 8.5455937]
+	return Pos(47.3977419, 8.5455937, 488+1) #point something
 
 def dist(a,b):
 	return geopy.distance.geodesic((a.latitude_deg, a.longitude_deg), (b.latitude_deg, b.longitude_deg)).m
