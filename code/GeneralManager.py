@@ -25,8 +25,8 @@ class GeneralManager():
         async for position in drone.inst.telemetry.position():
             drone.position = Position(position.latitude_deg, position.longitude_deg, position.absolute_altitude_m) #relative_altitude_m
             
-            if (not self.mission_is_done):
-                break
+            # if (not self.mission_is_done):
+            #     break
 
     async def get_ambulance_position(self, ambulance):
         """
@@ -67,7 +67,6 @@ class GeneralManager():
         self.missions.append(new_mission)
         
 
- 
 if __name__ == "__main__":
     manager = GeneralManager()
     manager.create_mission()

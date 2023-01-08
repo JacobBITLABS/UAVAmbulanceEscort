@@ -19,6 +19,9 @@ class Mission:
     
 
     def setup(self):
+        """
+        Setup a mission
+        """
         print("[INFO] mission setup...")     
         # get route / waypoints 
         print("-- computing routes")
@@ -44,7 +47,7 @@ class Mission:
             for waypoint in route:
                 drone.add_action(GoTo(waypoint))
                 drone.add_action(WaitFor(self.ambulance, self.all_drones))
-
+            
             # go to landing side depending on hospital
         
         # add landings and turn off connection
