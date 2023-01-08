@@ -96,10 +96,11 @@ class Mission:
 
             # go to landing side depending on hospital
         
-        # add landings
+        # add landings and turn off connection
         for drone in self.drones:
             ["[INFO] mission end, drones ordered to land!"]
-            drone.add_action(GoTo(land()))
+            drone.add_action(GoTo(land())) # land 
+            drone.close_conn()             # disconnect
 
         # # Join the main thread
         for drone in self.drones:
