@@ -1,4 +1,7 @@
 from mission import Mission
+import geopy.distance
+import asyncio
+
 """
 This is the class that would be called from an API like application like FastAPI
 """
@@ -16,11 +19,12 @@ class GeneralManager():
         self.missions.append(new_mission)
 
 
+    def get_drone_positions():
+        pass
+
 if __name__ == "__main__":
     manager = GeneralManager()
     manager.create_mission()
-    
-
 
 
 # ./Tools/simulation/gazebo/sitl_multiple_run.sh  -m iris -n 2
