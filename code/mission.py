@@ -1,5 +1,5 @@
 from MAVFleetControl.mavfleetcontrol.actions.goto import GoTo
-from MAVFleetControl.mavfleetcontrol.actions.waitForAmbulance import WaitFor
+from MAVFleetControl.mavfleetcontrol.actions.waitFor import WaitFor
 from MAVFleetControl.mavfleetcontrol.actions.land import land
 from MAVFleetControl.mavfleetcontrol.craft import State
 from droneDirection2 import DroneDirection
