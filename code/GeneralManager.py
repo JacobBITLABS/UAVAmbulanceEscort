@@ -21,6 +21,12 @@ class GeneralManager():
         """
         Subscribe to each drones position
         """
+        drone.position = Position(0,0,0)
+        while drone.conn == None:
+            await asyncio.sleep(20)
+        async for state in drone.conn.core.connection_state():
+            if state.is_connected:
+                break
         async for position in drone.conn.telemetry.position():
             drone.position = Position(position.latitude_deg, position.longitude_deg, position.absolute_altitude_m) #relative_altitude_m
             
@@ -55,7 +61,7 @@ class GeneralManager():
             """
             Ensure_future let’s us execute a coroutine in the background, without explicitly waiting for it to finish
             """
-            asyncio.ensure_future(self.get_drone_position(drone))
+            drone.loop.create_task(self.get_drone_position(drone))
 
         ambulance = Ambulance() # construct ambulance
         asyncio.ensure_future(self.get_ambulance_position(ambulance)) # subscribe position
@@ -69,6 +75,5 @@ class GeneralManager():
 if __name__ == "__main__":
     manager = GeneralManager()
     manager.create_mission()
-    asyncio.get_event_loop().run_in_executor(None, manager.create_mission)
 
 # ./Tools/simulation/gazebo/sitl_multiple_run.sh  -m iris -n 2
