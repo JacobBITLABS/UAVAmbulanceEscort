@@ -40,12 +40,12 @@ class GeneralManager():
         new_drone = Craft(id=id, connection_address=conn_address, mission_id= mission_id)
         return new_drone
     
-    def create_mission(self, start_position=(55.362929,10.347584), end_position=(55.385589, 10.365061)):
+    def create_mission(self, start_position=(55.362929,10.347584), end_position=(55.385589, 10.365061), num_drones=2):
         print(["[INFO] creating drones for new new mission..."])
         new_drones = []
         mission_id = uuid4()
 
-        for n in range(self.num_drones):
+        for n in range(num_drones):
             new_drone = self.create_drone(n, mission_id)
             new_drones.append(new_drone)
             self.drones.append(new_drone)
