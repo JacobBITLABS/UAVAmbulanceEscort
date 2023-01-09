@@ -245,7 +245,7 @@ async def run():
 					await drone.inst.action.goto_location(
 						m.pos.latitude_deg,
 						m.pos.longitude_deg,
-						m.pos.altitude_m + offset_height,
+						m.pos.altitude_m,
 						0,
 					)
 					print("Activate alert")
