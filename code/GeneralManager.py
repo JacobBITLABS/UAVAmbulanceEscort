@@ -69,6 +69,6 @@ class GeneralManager():
 if __name__ == "__main__":
     manager = GeneralManager()
     manager.create_mission()
-
+    asyncio.get_event_loop().run_in_executor(None, manager.create_mission)
 
 # ./Tools/simulation/gazebo/sitl_multiple_run.sh  -m iris -n 2
