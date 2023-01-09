@@ -23,7 +23,7 @@ class GeneralManager():
         """
         drone.position = Position(0,0,0)
         while drone.conn == None:
-            await asyncio.sleep(20)
+            await asyncio.sleep(5)
         async for state in drone.conn.core.connection_state():
             if state.is_connected:
                 break

@@ -55,7 +55,7 @@ class Mission:
         # add landings and turn off connection
         for drone in self.drones:
             ["[INFO] mission end, drones ordered to land!"]
-            drone.add_action(GoTo(land())) # land 
+            drone.add_action(land()) # land 
             drone.state = State.End        # End drone state, stop background position tracking
             drone.close_conn()             # disconnect
 
