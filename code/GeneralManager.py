@@ -4,7 +4,7 @@ from mission import Mission
 from MAVFleetControl.mavfleetcontrol.craft import Craft 
 from MAVFleetControl.mavfleetcontrol.states.position import Position
 from ambulance import Ambulance
-
+import logging, sys
 
 """
 This is the class that would be called from an API like application like FastAPI
@@ -23,7 +23,7 @@ class GeneralManager():
         """
         drone.position = Position(0,0,500)
         while drone.conn == None or not "action" in drone.conn._plugins:
-            await asyncio.sleep(5)
+            await asyncio.sleep(20)
         async for state in drone.conn.core.connection_state():
             if state.is_connected:
                 break
@@ -73,6 +73,7 @@ class GeneralManager():
         
 
 if __name__ == "__main__":
+    #logging.basicConfig(stream=sys.stdout, level=logging.DEBUG)
     manager = GeneralManager()
     manager.create_mission()
 

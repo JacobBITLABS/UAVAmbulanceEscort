@@ -59,12 +59,10 @@ class Mission:
         for drone in self.drones:
             ["[INFO] mission end, drones ordered to land!"]
             drone.add_action(land()) # land 
-            drone.state = State.End        # End drone state, stop background position tracking
             drone.close_conn()             # disconnect
 
 
         # # Join the main thread
-        for drone in self.drones:
-            drone.join()
-            
-    
+        #for drone in self.drones:
+        #    #BUG HERE
+        #    drone.join()

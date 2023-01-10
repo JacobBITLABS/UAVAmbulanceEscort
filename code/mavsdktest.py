@@ -154,6 +154,10 @@ async def run():
 
 	await asyncio.sleep(40)
 
+	print("-- Set max speed")
+	for drone in drones:
+		await drone.inst.action.set_maximum_speed(23)
+
 	print("-- Loop")
 	while (running):
 		for k,drone in enumerate(drones):
@@ -170,11 +174,13 @@ async def run():
 						m.pos.altitude_m + offset_height,
 						0,
 					)
+					print(f"Drone {drone.idx} {drone.rank} set to Travel")
 					drone.state = State.Travel
 				else:
 					#Follow other drone
 					if (follow_me_enable):
 						await drone.inst.follow_me.start()
+					print(f"Drone {drone.idx} {drone.rank} set to Follow")
 					drone.state = State.Follow
 
 			#Follow next drone in order (keep a line)
@@ -194,6 +200,7 @@ async def run():
 						)
 				else: #If not same mission, go to mission checkpoint instead
 					await drone.inst.follow_me.stop()
+					print(f"Drone {drone.idx} {drone.rank} set to FollowMission")
 					drone.state = State.FollowMission
 
 			#Go to mission checkpoint
@@ -213,12 +220,15 @@ async def run():
 					next_drone = [i for i in drones if i.rank == drone.rank-1][0]
 					#If other drone already on this mission, follow it (avoid collisions)
 					if (next_drone.mission == drone.mission):
-						drone.state = state.Follow
+						print(f"Drone {drone.idx} {drone.rank} set to Follow")
+						drone.state = State.Follow
 					else: #Otherwise go to mission
-						drone.state = state.FollowMission
+						print(f"Drone {drone.idx} {drone.rank} set to FollowMission")
+						drone.state = State.FollowMission
 					
 					#If out of missions, die (i dont think this code should ever trigger)
 					if (drone.mission == len(mission)):
+						print(f"Drone {drone.idx} {drone.rank} set to End")
 						drone.state = State.End
 
 			#The front drone simply travels to waypoints
@@ -228,10 +238,14 @@ async def run():
 				if (dist(drone.pos, m.pos) <= 2):
 					#If should stop
 					if (m.stop and not m.visited):
+						print(f"Drone {drone.idx} {drone.rank} set to Wait")
 						drone.state = State.Wait
 						m.visited = True
+						#IndexError
 						prev_drone = [i for i in drones if i.rank == drone.rank+1][0]
-						prev_drone.state = State.Travel
+						if (prev_drone.state == State.Follow or prev_drone.state == State.FollowMission):
+							print(f"Drone {prev_drone.idx} {prev_drone.rank} set to Travel")
+							prev_drone.state = State.Travel
 
 						#Set yourself as last, and wait here
 						for i in drones:
@@ -240,6 +254,7 @@ async def run():
 					else: #Otherwise next mission
 						drone.mission += 1
 						if (drone.mission == len(mission)):
+							print(f"Drone {drone.idx} {drone.rank} set to End")
 							drone.state = State.End
 				else: #Otherwise continue going to mission
 					await drone.inst.action.goto_location(
@@ -260,6 +275,7 @@ async def run():
 						0,
 					)
 					print("Activate alert")
+					print(f"Drone {drone.idx} {drone.rank} set to WaitActive")
 					drone.state = State.WaitActive
 
 			#If ambulance left stop
@@ -268,17 +284,21 @@ async def run():
 					drone.mission += 1
 
 					if drone.rank == 0:
+						print(f"Drone {drone.idx} {drone.rank} set to Travel")
 						drone.state = State.Travel
 					else:
+						print(f"Drone {drone.idx} {drone.rank} set to Follow")
 						drone.state = State.Follow
 
 					if (drone.mission == len(mission)):
+						print(f"Drone {drone.idx} {drone.rank} set to End")
 						drone.state = State.End
 
 			#If all stopped, then exit
 			if drone.state == State.End:
 				await drone.action.land()
 				if (not False in [i.state == State.End for i in drones]):
+					print(f"Drones set to Exit")
 					running = False
 
 		await asyncio.sleep(0.2)
@@ -287,5 +307,6 @@ async def run():
 	running = False
 
 if __name__ == "__main__":
-	asyncio.ensure_future(run())
-	asyncio.get_event_loop().run_forever()
+	#asyncio.ensure_future(run())
+	#asyncio.get_event_loop().run_forever()
+	asyncio.get_event_loop().run_until_complete(run())

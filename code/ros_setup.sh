@@ -22,8 +22,8 @@ source ~/PX4-Autopilot/Tools/simulation/gazebo/setup_gazebo.bash ~/PX4-Autopilot
 export ROS_PACKAGE_PATH=$ROS_PACKAGE_PATH:~/PX4-Autopilot
 export ROS_PACKAGE_PATH=$ROS_PACKAGE_PATH:~/PX4-Autopilot/Tools/simulation/gazebo/sitl_gazebo
 export GAZEBO_PLUGIN_PATH=$GAZEBO_PLUGIN_PATH:/usr/lib/x86_64-linux-gnu/gazebo-9/plugins
-export PX4_HOME_LAT=55.362929
-export PX4_HOME_LON=10.347584
+export PX4_HOME_LAT=55.35869
+export PX4_HOME_LON=10.34174
 export PX4_HOME_ALT=489
 
 sudo apt install python3-pip
@@ -40,3 +40,7 @@ make px4_sitl gazebo
 
 #TODO: Write project files to git also
 #cp /mnt/UNI/DM884\ -\ Autonomous/UAVAmbulanceEscort/code/scripts/ros.py scripts/ros.py && roslaunch escort_py start_offb.launch
+
+
+#$ cd ~/PX4-Autopilot/Tools/simulation/gazebo
+#$ ./sitl_multiple_run.sh -n 3
