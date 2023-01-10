@@ -22,6 +22,9 @@ source ~/PX4-Autopilot/Tools/simulation/gazebo/setup_gazebo.bash ~/PX4-Autopilot
 export ROS_PACKAGE_PATH=$ROS_PACKAGE_PATH:~/PX4-Autopilot
 export ROS_PACKAGE_PATH=$ROS_PACKAGE_PATH:~/PX4-Autopilot/Tools/simulation/gazebo/sitl_gazebo
 export GAZEBO_PLUGIN_PATH=$GAZEBO_PLUGIN_PATH:/usr/lib/x86_64-linux-gnu/gazebo-9/plugins
+export PX4_HOME_LAT=55.362929
+export PX4_HOME_LON=10.347584
+export PX4_HOME_ALT=489
 
 sudo apt install python3-pip
 sudo pip3 install kconfiglib
