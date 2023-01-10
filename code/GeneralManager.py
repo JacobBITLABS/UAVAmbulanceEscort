@@ -2,9 +2,10 @@ from uuid import uuid4
 import asyncio
 from mission import Mission
 from MAVFleetControl.mavfleetcontrol.craft import Craft 
+from MAVFleetControl.mavfleetcontrol.craft import State
 from MAVFleetControl.mavfleetcontrol.states.position import Position
 from ambulance import Ambulance
-import logging, sys
+import logging, sys, threading
 
 """
 This is the class that would be called from an API like application like FastAPI
@@ -27,20 +28,15 @@ class GeneralManager():
         async for state in drone.conn.core.connection_state():
             if state.is_connected:
                 break
+
         async for position in drone.conn.telemetry.position():
             drone.position = Position(position.latitude_deg, position.longitude_deg, position.absolute_altitude_m) #relative_altitude_m
-            
+            #print("Position record: ", drone.position.lat, drone.position.lng)
+
             # stop if drone status is End
-            if (drone.state.End):
+            if (drone.state == State.End):
                 break
 
-    async def get_ambulance_position(self, ambulance):
-        """
-        Subscribe to the ambulance position
-        """
-        await asyncio.sleep(0.2)
-        ambulance.position = Position(47.3977419, 8.5455937, 488+1)
-    
     def create_drone(self, id, mission_id):
         conn_address = "udp://:1454" + str(id)
         new_drone = Craft(id=id, connection_address=conn_address, mission_id= mission_id)
@@ -64,7 +60,7 @@ class GeneralManager():
             drone.loop.create_task(self.get_drone_position(drone))
 
         ambulance = Ambulance() # construct ambulance
-        asyncio.ensure_future(self.get_ambulance_position(ambulance)) # subscribe position
+        threading.Thread(target=ambulance.drive).start()
 
         print(["[INFO] creating new mission..."])
         new_mission = Mission(mission_id, new_drones, ambulance, self.drones, start_position, end_position) # construct mission obj

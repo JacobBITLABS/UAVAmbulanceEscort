@@ -30,18 +30,20 @@ class Mission:
         print("-- computing routes")
         drone_direction = DroneDirection()
         drone_direction.gmaps_init()
-        
+
         d1, d2, route = drone_direction.get_directions(self.start_position, self.end_position)
         routes = [d1, d2]
         # print("D1: ", d1)
         # print("D2: ", d2)
-        
+
+        self.ambulance.route(route)
+
         # # start the drones event loop
         # drone.start()
         for drone in self.drones:
             drone.start()
             drone.state = State.Start # set drone state
-  
+
         # add tasks to the drones
         """
         Normally we would like to make a mission, however this is not suitable for fast-coordinating tasks
