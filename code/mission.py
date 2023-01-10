@@ -1,7 +1,9 @@
 from MAVFleetControl.mavfleetcontrol.actions.goto import GoTo
 from MAVFleetControl.mavfleetcontrol.actions.waitFor import WaitFor
+from MAVFleetControl.mavfleetcontrol.actions.waitForArrival import WaitForArrival
 from MAVFleetControl.mavfleetcontrol.actions.land import land
 from MAVFleetControl.mavfleetcontrol.craft import State
+from MAVFleetControl.mavfleetcontrol.states.position import Position
 from droneDirection2 import DroneDirection
 
 class Mission:
@@ -48,6 +50,7 @@ class Mission:
             # add way points
             for waypoint in route:
                 drone.add_action(GoTo(waypoint))
+                drone.add_action(WaitForArrival(Position(waypoint[0],waypoint[1],488+1), drone))
                 drone.add_action(WaitFor(self.ambulance, drone, self.all_drones))
             
             # go to landing side depending on hospital
