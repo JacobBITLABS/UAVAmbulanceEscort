@@ -21,8 +21,8 @@ class GeneralManager():
         """
         Subscribe to each drones position
         """
-        drone.position = Position(0,0,0)
-        while drone.conn == None:
+        drone.position = Position(0,0,500)
+        while drone.conn == None or not "action" in drone.conn._plugins:
             await asyncio.sleep(5)
         async for state in drone.conn.core.connection_state():
             if state.is_connected:

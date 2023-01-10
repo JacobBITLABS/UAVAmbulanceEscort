@@ -14,7 +14,8 @@ class State(Enum):
 	Travel = 4 #Normal travel
 	TravelWait = 5 #Is decending to waypoint
 	Wait = 6 #Is at a waypoint
-	End = 7 #At the end
+	WaitActive = 7
+	End = 8 #At the end
 
 class Drone:
 	inst = None
@@ -57,6 +58,16 @@ mission = [
 	Mission(2, Pos(47.39707095615432, 8.54589240348472, 488+offground_height), True),
 	Mission(3, Pos(47.3970510263338, 8.546029192499857, 488+offground_height), True),
 	Mission(4, Pos(47.39741230621734, 8.546302785162757, 488+offground_height), True)
+]
+mission = [
+	Mission(0, Pos(55.369933, 10.410358, 488+offground_height), False),
+	Mission(1, Pos(55.373436, 10.409693, 488+offground_height), True),
+	Mission(2, Pos(55.373846, 10.406754, 488+offground_height), True),
+	Mission(3, Pos(55.374928, 10.396455, 488+offground_height), True),
+	Mission(4, Pos(55.378842, 10.396223, 488+offground_height), True),
+	Mission(5, Pos(55.381858, 10.371553, 488+offground_height), True),
+	Mission(6, Pos(55.384692, 10.372341, 488+offground_height), True),
+	Mission(7, Pos(55.385609, 10.364952, 488+offground_height), True)
 ]
 running = True
 offset_height = 10
@@ -101,7 +112,7 @@ async def run():
 	global drones
 	global running
 
-	for i in range(3):
+	for i in range(2):
 		drones.append(
 			Drone(
 				System(port=50040 + i),
@@ -165,7 +176,7 @@ async def run():
 					if (follow_me_enable):
 						await drone.inst.follow_me.start()
 					drone.state = State.Follow
-				
+
 			#Follow next drone in order (keep a line)
 			if drone.state == State.Follow:
 				next_drone = [i for i in drones if i.rank == drone.rank-1][0]
@@ -249,13 +260,28 @@ async def run():
 						0,
 					)
 					print("Activate alert")
-				#TODO: If ambulance is past, set state to Follow
+					drone.state = State.WaitActive
+
+			#If ambulance left stop
+			if drone.state == State.WaitActive:
+				if (dist(drone.pos, get_ambulance_pos()) > 30):
+					drone.mission += 1
+
+					if drone.rank == 0:
+						drone.state = State.Travel
+					else:
+						drone.state = State.Follow
+
+					if (drone.mission == len(mission)):
+						drone.state = State.End
+
+			#If all stopped, then exit
+			if drone.state == State.End:
+				await drone.action.land()
+				if (not False in [i.state == State.End for i in drones]):
+					running = False
 
 		await asyncio.sleep(0.2)
-
-	print("-- Landing")
-	for drone in drones:
-		await drone.action.land()
 
 	print("-- Done")
 	running = False
