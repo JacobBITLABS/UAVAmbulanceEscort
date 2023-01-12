@@ -26,7 +26,6 @@ class DroneDirection:
 
     def gmaps_init(self):
         """ Construct google maps client object """
-        #api_key = 'AIzaSyCkg3-WSTJJQbwswxJnQ_QN2_VtbtZS_t0'
         self.gmaps = googlemaps.Client(key=self.api_key)
 
 
