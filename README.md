@@ -18,15 +18,19 @@ Restart your system, on linux:
 ```
 sudo reboot now
 ```
+Clone this repository
+```
+git clone https://github.com/JacobBITLABS/UAVAmbulanceEscort
+cd UAVAmbulanceEscort\code
+git clone https://github.com/JacobBITLABS/MAVFleetControl
+```
+
 ## QTGroundControl
 This is essentially not necesarry, but is an easy monitoring tool. Download image from following: 
 http://qgroundcontrol.com/downloads/
 
 # Running 
 To run the project use the following commands
-
-## QGroundControl 
-./QGroundControl.AppImage
 
 ## Start PX4 and Gazebo:
 ```
@@ -42,12 +46,10 @@ cd ~/PX4-Autopilot/Tools/simulation/gazebo
 ./sitl_multiple_run.sh -m iris -n 2
 ```
 
+## QGroundControl 
+./QGroundControl.AppImage
+
 ## Start the program
-```
-git clone https://github.com/JacobBITLABS/UAVAmbulanceEscort
-cd UAVAmbulanceEscort\code
-git clone https://github.com/JacobBITLABS/MAVFleetControl
-```
 Replace the api keys in droneDirection2.py with your own
 ```
 pip3 install mavsdk geopy openrouteservice OSMPythonTools gmplot googlemaps
