@@ -18,6 +18,9 @@ class Ambulance:
         return geopy.distance.distance((a.lat, a.lng), (b.lat, b.lng)).km
 
     def drive(self):
+        """
+        Pretends to drive to waypoints
+        """
         while self.waypoints == None:
             time.sleep(60)
 

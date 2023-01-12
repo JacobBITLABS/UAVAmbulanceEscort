@@ -38,11 +38,17 @@ class GeneralManager():
                 break
 
     def create_drone(self, id, mission_id):
+        """
+        Instansiate a drone
+        """
         conn_address = "udp://:1454" + str(id)
         new_drone = Craft(id=id, connection_address=conn_address, mission_id= mission_id)
         return new_drone
     
     def create_mission(self, start_position=(55.362929,10.347584), end_position=(55.385589, 10.365061), num_drones=2):
+        """
+        Initiate a mission and spawn drones
+        """
         print(["[INFO] creating drones for new new mission..."])
         new_drones = []
         mission_id = uuid4()
