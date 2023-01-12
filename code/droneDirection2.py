@@ -10,7 +10,7 @@ class DroneDirection:
     """
     Class Responsible for communication with OSM and Google Maps For Plotting
     """
-    def __init__(self, api_key='AIzaSyCkg3-WSTJJQbwswxJnQ_QN2_VtbtZS_t0', num_drones=2):
+    def __init__(self, api_key='PROVIDE GOOGEL MAPS KEY HERE', num_drones=2):
         # init class attributes
         self.api_key = api_key
         self.num_drones = num_drones
@@ -60,7 +60,7 @@ class DroneDirection:
         """
         # API expect lat/lng flipped in tuples
         coords = ((start[1], start[0]), (end[1], end[0]))
-        client = openrouteservice.Client(key='5b3ce3597851110001cf624825a4a126395040b98be248721b8050e1') # Specify your personal API key
+        client = openrouteservice.Client(key='PROVIDE OPEN ROUTE SERVICE KEY HERE') # Specify your personal API key
         # decode_polyline needs the geometry only
         geometry = client.directions(coords)['routes'][0]['geometry']
         decoded = convert.decode_polyline(geometry) # line string 
