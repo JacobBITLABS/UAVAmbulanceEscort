@@ -50,6 +50,6 @@ git clone https://github.com/JacobBITLABS/MAVFleetControl
 ```
 Replace the api keys in droneDirection2.py with your own
 ```
-pip3 install mavsdk geopy
+pip3 install mavsdk geopy openrouteservice OSMPythonTools gmplot googlemaps
 python3 GeneralManager.py
 ```
